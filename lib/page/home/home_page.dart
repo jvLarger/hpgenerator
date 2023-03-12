@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hpgenerator/components/CustomHeader/custom_header.dart';
 import 'package:hpgenerator/model/tipo_gerador.dart';
 import 'package:hpgenerator/page/anagrama/anagrama_page.dart';
+import 'package:hpgenerator/page/bingo/bingo_page.dart';
 import 'package:hpgenerator/page/confundus/confundus_page.dart';
+import 'package:hpgenerator/page/embaralhador/embaralhador_page.dart';
 import 'package:hpgenerator/page/home/components/geradores_jogos.dart';
 import 'package:hpgenerator/util/jl.dart';
 
@@ -31,7 +33,7 @@ class _HomePageState extends State<HomePage> {
       TipoGerador(
         title: "Anagrama",
         subtitle: "Clique aqui para acessar",
-        icon: Icons.school,
+        icon: Icons.interests,
         onTap: () {
           Navigator.push(
             context,
@@ -54,6 +56,32 @@ class _HomePageState extends State<HomePage> {
           }),
     );
 
+    _listaTipoGeradorBkp.add(
+      TipoGerador(
+          icon: Icons.shuffle,
+          title: "Embaralhador",
+          subtitle: "Clique aqui para acessar",
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const EmabaralhadorPage()),
+            );
+          }),
+    );
+
+     _listaTipoGeradorBkp.add(
+      TipoGerador(
+          icon: Icons.numbers,
+          title: "Bingo",
+          subtitle: "Clique aqui para acessar",
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const BingoPage()),
+            );
+          }),
+    );
+
     _listaTipoGerador.addAll(_listaTipoGeradorBkp);
 
     setState(() {
@@ -69,7 +97,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             CustomHeader(
-              title: "Geradores de Jogos",
+              title: "RPG - Instituto Lumos de Magia",
               subtitle: "Crie de maneira rápida e eficaz os seus jogos",
               isImplementsAppbar: false,
               controller: _searchController,

@@ -1,56 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hpgenerator/components/CustomBody/custom_body.dart';
 import 'package:hpgenerator/components/CustomHeader/custom_header.dart';
+import 'package:hpgenerator/components/CustomBody/custom_body.dart';
 import 'package:hpgenerator/util/jl.dart';
 
-class AnagramaPage extends StatefulWidget {
-  const AnagramaPage({super.key});
+class EmabaralhadorPage extends StatefulWidget {
+  const EmabaralhadorPage({super.key});
 
   @override
-  State<AnagramaPage> createState() => _AnagramaPageState();
+  State<EmabaralhadorPage> createState() => _EmabaralhadorPageState();
 }
 
-class _AnagramaPageState extends State<AnagramaPage> {
+class _EmabaralhadorPageState extends State<EmabaralhadorPage> {
+
   final TextEditingController _palavrasOriginaisController = TextEditingController();
   List<String> _listaPalavrasProntas = [];
   bool _isResultadoVisivel = false;
-  bool _isIgnorarEspacos = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(217, 216, 217, 1),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const CustomHeader(
-              title: "Anagrama",
-              subtitle: "Informe abaixo as palavras desejadas",
-              isImplementsAppbar: true,
-            ),
-            CustomBody(
+       backgroundColor: const Color.fromRGBO(217, 216, 217, 1),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const CustomHeader(
+              title: "Embaralhador",
+                subtitle: "Informe abaixo as palavras desejadas",
+                isImplementsAppbar: true,
+              ),
+              CustomBody(
               child: Column(
                 children: [
                   Visibility(
                     visible: !_isResultadoVisivel,
                     child: Column(
                       children: [
-                        SwitchListTile(
-                          title: const Text(
-                            'Ignorar Espaços?',
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: Color.fromRGBO(70, 49, 92, 1)),
-                          ),
-                          value: _isIgnorarEspacos,
-                          onChanged: (bool? value) {
-                            _isIgnorarEspacos = !_isIgnorarEspacos;
-                            setState(() {});
-                          },
-                        ),
-                        SizedBox(
-                          height: JL.kDefaultPadding,
-                        ),
+                        
                         TextFormField(
                           controller: _palavrasOriginaisController,
                           minLines: 5,
@@ -68,7 +54,7 @@ class _AnagramaPageState extends State<AnagramaPage> {
                             ),
                             hintStyle: const TextStyle(fontSize: 12),
                             label: const Text(
-                              "Palavras do Anagrama",
+                              "Palavras para Embaralhar",
                               style: TextStyle(
                                   fontSize: 12,
                                   color: Color.fromRGBO(70, 49, 92, 1)),
@@ -84,7 +70,7 @@ class _AnagramaPageState extends State<AnagramaPage> {
                                 const Color.fromRGBO(70, 49, 92, 1)),
                           ),
                           onPressed: () {
-                            gerarAnagrama();
+                            embaralhar();
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -98,7 +84,7 @@ class _AnagramaPageState extends State<AnagramaPage> {
                                 width: 10,
                               ),
                               Text(
-                                "Gerar Anagrama",
+                                "Embaralhar",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.normal,
@@ -119,7 +105,7 @@ class _AnagramaPageState extends State<AnagramaPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text(
-                              "Anagramas Gerados",
+                              "Palavras Embaralhadas",
                               style: TextStyle(
                                   fontSize: 15,
                                   letterSpacing: 0.5,
@@ -164,7 +150,7 @@ class _AnagramaPageState extends State<AnagramaPage> {
                                 const Color.fromRGBO(70, 49, 92, 1)),
                           ),
                           onPressed: () {
-                            gerarAnagrama();
+                            embaralhar();
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -223,17 +209,15 @@ class _AnagramaPageState extends State<AnagramaPage> {
                       ],
                     ),
                   )
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
+                ],),)
+            ],
+          ),
+        )
     );
   }
-
-  gerarAnagrama() {
-    JL.showLoading(context);
+  
+  void embaralhar() {
+     JL.showLoading(context);
 
     if (_palavrasOriginaisController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -243,47 +227,14 @@ class _AnagramaPageState extends State<AnagramaPage> {
       );
       JL.hideLoading(context);
     } else {
-      List<String> listaPalavrasOriginais =
-          _palavrasOriginaisController.text.split("\n");
-      List<String> listaPalavrasAnagramas = [];
-
-      for (String palavraOriginal in listaPalavrasOriginais) {
-        if (_isIgnorarEspacos) {
-          listaPalavrasAnagramas
-              .add(gerarAnagramaIgnorarEspaco(palavraOriginal));
-        } else {
-          listaPalavrasAnagramas
-              .add(gerarAnagramaRespeitandoEspaco(palavraOriginal));
-        }
-      }
-
+      List<String> listaPalavrasOriginais = _palavrasOriginaisController.text.split("\n");
+      listaPalavrasOriginais.shuffle();
+      
       setState(() {
         _isResultadoVisivel = true;
-        _listaPalavrasProntas = listaPalavrasAnagramas;
+        _listaPalavrasProntas = listaPalavrasOriginais;
       });
       JL.hideLoading(context);
     }
-  }
-
-  String gerarAnagramaIgnorarEspaco(String palavraOriginal) {
-    List<String> listaLetras = palavraOriginal.trim().split("");
-    listaLetras.shuffle();
-
-    return listaLetras.join("");
-  }
-
-  String gerarAnagramaRespeitandoEspaco(String palavraOriginal) {
-    List<String> listaPalavras = palavraOriginal.trim().split(" ");
-
-    String anagrama = "";
-
-    for (String palavra in listaPalavras) {
-      List<String> letras = palavra.trim().split("");
-      letras.shuffle();
-
-      anagrama += "${letras.join("")} ";
-    }
-
-    return anagrama.trim();
   }
 }

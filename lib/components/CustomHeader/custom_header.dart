@@ -15,7 +15,7 @@ class CustomHeader extends StatelessWidget {
     return Stack(
       alignment: Alignment.topCenter,
       children: [
-         SizedBox(height: callbackSearch != null ? 220 : 180,),
+         SizedBox(height: callbackSearch != null ? 220 : 190,),
         Container(
           height: callbackSearch != null ? 180 : 160,
           width: double.maxFinite,
@@ -34,7 +34,7 @@ class CustomHeader extends StatelessWidget {
             children: [
 
                ( callbackSearch == null ? 
-              const SizedBox(height: 40,) : 
+              const SizedBox(height: 50,) : 
                const SizedBox(height: 0,)
              ),
 
